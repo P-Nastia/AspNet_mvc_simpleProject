@@ -1,0 +1,34 @@
+﻿
+@{
+    //Layout = null;// не використовувати обгортку сторінки (базовий вигляд)
+
+}
+
+@model List<Web1.Models.Category.CategoryItemViewModel> // створення списку, в який записується список в параметрах View
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Категорії мультфільмів</h2>
+    <a href="@Url.Action("Create")" class="btn btn-success">Add category</a> @* тут буде в силці посилання на сторінку для створення категорії, автоматично підтягує до Create - Category, бо ми в файлі Categories *@
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+       
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                
+                <div class="card h-100 shadow-sm">
+                    <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 200px; object-fit: cover;">
+                    <a href="@Url.Action("Edit",item)" class="position-absolute top-0 end-2 m-2">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4226/4226577.png" alt="Edit" style="width: 24px; height: 24px;">
+                    </a>
+                    <a href="@Url.Action("Delete",item)" class="position-absolute top-0 end-0 m-2">
+                        <img src="https://cdn-icons-png.flaticon.com/512/5820/5820762.png" alt="Edit" style="width: 24px; height: 24px;">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="card-text">@item.Description</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
