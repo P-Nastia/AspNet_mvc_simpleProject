@@ -11,7 +11,8 @@ public class CategoryCreateViewModel
     [Display(Name = "Опис")]
     public string? Description { get; set; } = string.Empty;
 
-    [Display(Name = "Url адреса фото")]
+    [Display(Name = "Оберіть фото")]
+    
     //[DataType(DataType.ImageUrl)] // в input буде вказуватися type автоматично
-    public string ImageUrl { get; set; } = string.Empty;
+    public IFormFile ImageFile { get; set; } = null!;
 }

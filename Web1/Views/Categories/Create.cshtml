@@ -4,7 +4,7 @@
 <div class="container">
     <div class="container">
 
-    <form asp-action="Create" class="p-4 shadow rounded bg-light" style="max-width: 600px; margin: auto;">
+    <form asp-action="Create" enctype="multipart/form-data" class="p-4 shadow rounded bg-light" style="max-width: 600px; margin: auto;"> @* enctype="multipart/form-data" -- означає, що на сервер будуть передаватися файли *@
         <h4 class="mb-4">Створення категорії</h4>
 
         <!-- Назва категорії -->
@@ -22,8 +22,8 @@
 
         <!-- Зображення (URL) -->
         <div class="mb-3">
-            <label asp-for="ImageUrl" class="form-label">URL зображення</label> @* так ще не будуть поля очищатися, якщо використовувати  asp-for *@
-            <input class="form-control" asp-for="ImageUrl" placeholder="https://example.com/image.jpg">
+            <label asp-for="ImageFile" class="form-label"></label> @* так ще не будуть поля очищатися, якщо використовувати  asp-for *@
+            <input asp-for="ImageFile" class="form-control" accept="image/*" type="file">
         </div>
 
         <button type="submit" class="btn btn-primary">Створити категорію</button>

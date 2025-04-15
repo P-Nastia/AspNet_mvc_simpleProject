@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Web1.Data;
+using Web1.Interfaces;
+using Web1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,7 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
         opt.UseNpgsql(builder.Configuration.GetConnectionString("MyConnection")));
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());// реЇстрац≥€ AutoMapper
+builder.Services.AddScoped<IImageService, ImageService>();
 
 // будуть View - стор≥нки, де можна писати на c# (exp - Index.cshtml)
 // ф≥шка -- перев≥р€ютьс€ на c# ≥ комп≥люютьс€ у зб≥рку
@@ -39,6 +43,16 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Categories}/{action=Index}/{id?}") // тут викликаЇтьс€ контролер при запуску програми
     .WithStaticAssets();
+
+var dir = builder.Configuration["ImagesDir"];
+string path = Path.Combine(Directory.GetCurrentDirectory(), dir);
+Directory.CreateDirectory(path);
+
+app.UseStaticFiles(new StaticFileOptions // наданн€ доступу до папки з фото
+{
+    FileProvider = new PhysicalFileProvider(path),
+    RequestPath = $"/{dir}" // куди звертатис€
+});
 
 await app.SeedData();
 

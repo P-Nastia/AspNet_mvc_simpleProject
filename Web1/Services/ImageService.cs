@@ -1,0 +1,49 @@
+﻿using Web1.Interfaces;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Webp;
+using SixLabors.ImageSharp.Processing;
+
+namespace Web1.Services
+{
+    public class ImageService(IConfiguration configuration) : IImageService
+    {
+        public async Task<string> SaveImageAsync(IFormFile file)
+        {
+            using MemoryStream ms = new();
+            await file.CopyToAsync(ms); // зчитка байтів фото
+            var bytes = ms.ToArray();
+            var imageName = await SaveImageAsync(bytes);
+
+            return imageName;
+        }
+        private async Task<string> SaveImageAsync(byte[] bytes)
+        {
+            string imageName = $"{Path.GetRandomFileName()}.webp";
+            var sizes = configuration.GetRequiredSection("ImageSizes").Get<List<int>>();
+
+            var tasks = sizes
+                .AsParallel()
+                .Select(s => SaveImageAsync(bytes, imageName, s))
+                .ToArray();
+
+            await Task.WhenAll(tasks);
+            return imageName;
+        }
+
+        private async Task SaveImageAsync(byte[] bytes, string name, int size)
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), configuration["ImagesDir"]!,//configuration["ImagesDir"]! --- ! каже, що не може бути null
+                $"{size}_{name}");
+            using var image = Image.Load(bytes);
+            image.Mutate(async imgContext =>
+            {
+                imgContext.Resize(new ResizeOptions
+                {
+                    Size = new Size(size, size),
+                    Mode = ResizeMode.Max
+                });
+                await image.SaveAsync(path, new WebpEncoder());
+            });
+        }
+    }
+}
