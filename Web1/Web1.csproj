@@ -22,6 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
+	  <Content Include="images\**\*.*">
+		  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  
     <Content Update="Helpers\JsonData\Categories.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
