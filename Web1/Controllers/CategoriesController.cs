@@ -79,7 +79,7 @@ namespace Web1.Controllers
                 return NotFound();
             }
 
-            var duplicate = await context.Categories.FirstOrDefaultAsync(x => x.Id == model.Id && x.Name != model.Name);
+            var duplicate = await context.Categories.FirstOrDefaultAsync(x => x.Id != model.Id && x.Name == model.Name);
             if (duplicate != null)
             {
                 ModelState.AddModelError("Name", "Така категорія уже існує");
