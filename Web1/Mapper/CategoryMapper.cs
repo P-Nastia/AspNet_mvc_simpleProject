@@ -16,7 +16,7 @@ public class CategoryMapper : Profile
 
         CreateMap<CategoryEntity, CategoryEditViewModel>()
             .ForMember(x => x.ViewImage, opt => opt.MapFrom(x => 
-            string.IsNullOrEmpty(x.ImageUrl)?"/pictures/default.jpg":$"/images/400_{x.ImageUrl}"))
+            string.IsNullOrEmpty(x.ImageUrl)?"/pictures/default.png":$"/images/400_{x.ImageUrl}"))
             .ForMember(x=>x.ImageFile,opt=>opt.Ignore())
             .ReverseMap(); // і туди і назад mapping;
 
