@@ -1,32 +1,71 @@
 ﻿@model CategoryEditViewModel
 
+@{
+    ViewData["Title"] = "Редагувати";
+}
+
 <div class="container">
     <div class="container">
 
-        <form asp-action="Edit" class="p-4 shadow rounded bg-light" style="max-width: 600px; margin: auto;">
+        <form asp-action="Edit" enctype="multipart/form-data" class="p-4 shadow rounded bg-light" style="max-width: 600px; margin: auto;">
             <h4 class="mb-4">Редагування категорії</h4>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input asp-for="ViewImage" type="hidden">  @* щоби навіть після return View() фотографія не зникала *@
+
 
             <!-- Назва категорії -->
             <div class="mb-3">
                 <label asp-for="Name" class="form-label">Назва категорії</label>
-                <input asp-for="Name" class="form-control" placeholder="Введіть назву категорії" required>
+                <input asp-for="Name" class="form-control" placeholder="Введіть назву категорії" >
                 <span asp-validation-for="Name" class="text-danger"></span> @* щоби з CategoryCreateViewModel витягувало помилку *@
             </div>
 
             <!-- Опис -->
             <div class="mb-3">
-                <label asp-for="Description" class="form-label">Опис</label>
-                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Введіть опис категорії"></textarea>
+                <label asp-for="Description" class="form-label">Назва категорії</label>
+                <input asp-for="Description" class="form-control" placeholder="Введіть назву категорії" >
+                <span asp-validation-for="Description" class="text-danger"></span> 
             </div>
 
-            <!-- Зображення (URL) -->
-            <div class="mb-3">
-                <label asp-for="ImageUrl" class="form-label">URL зображення</label> @* так ще не будуть поля очищатися, якщо використовувати  asp-for *@
-                <input class="form-control" asp-for="ImageUrl" placeholder="https://example.com/image.jpg">
+            <div class="row">
+                <div class="col-md-3">
+                    <img src="@Model.ViewImage" id="imagePreview" width="100%"/>
+                </div>
+                <div class="col-md-9">
+                    <div class="mb-3">
+                        <label asp-for="ImageFile" class="form-label"></label> @* так ще не будуть поля очищатися, якщо використовувати  asp-for *@
+                        <input asp-for="ImageFile" class="form-control" accept="image/*" type="file">
+                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+
+                    </div>
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Редагувати категорію</button>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value = "Редагувати категорію"/>
+
+            </div>
             <a asp-action="Index" class="btn btn-info">Cancel</a> @* інший спосіб переведення на метод Index, використовується маршрутизація *@
         </form>
     </div>
 </div>
+
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.getElementById("ImageFile").addEventListener("change",(e) => {
+            console.log("e",e.target.files[0]);
+            const file = e.target.files[0];
+            if(file){
+                document.getElementById("imagePreview").src=URL.createObjectURL(file);
+            }
+        })
+
+    </script>
+}

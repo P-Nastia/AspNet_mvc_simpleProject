@@ -5,7 +5,7 @@
     <link href="/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Великоднє Привітання</title>
+    <title>Пасхальні свята @ViewBag.Title</title> @* ViewBag - пілтягує дані по назві,записані в коді c# *@
     <!-- Підключення Bootstrap -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -21,8 +21,15 @@
     </style>
 </head>
 <body>
-    @RenderBody()
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

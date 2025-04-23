@@ -13,8 +13,13 @@ public class CategoryMapper : Profile
             .ForMember(x => x.Image, opt => opt.MapFrom(x => x.ImageUrl));
         CreateMap<CategoryCreateViewModel, CategoryEntity>()
             .ForMember(x=>x.ImageUrl,opt=>opt.Ignore()); // для створення нової категорії
-        CreateMap<CategoryItemViewModel, CategoryEditViewModel>(); 
-        CreateMap<CategoryEditViewModel, CategoryItemViewModel>(); 
-        CreateMap<CategoryEntity, CategoryEditViewModel>(); 
+
+        CreateMap<CategoryEntity, CategoryEditViewModel>()
+            .ForMember(x => x.ViewImage, opt => opt.MapFrom(x => 
+            string.IsNullOrEmpty(x.ImageUrl)?"/pictures/default.jpg":$"/images/400_{x.ImageUrl}"))
+            .ForMember(x=>x.ImageFile,opt=>opt.Ignore())
+            .ReverseMap(); // і туди і назад mapping;
+
+        //.ReverseMap(); // і туди і назад mapping
     }
 }

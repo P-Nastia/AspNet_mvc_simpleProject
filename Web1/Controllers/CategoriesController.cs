@@ -17,6 +17,7 @@ namespace Web1.Controllers
         {
             var model = mapper.ProjectTo<CategoryItemViewModel>(context.Categories).ToList();
             model = model.OrderBy(x => x.Id).ToList();
+            ViewBag.Title = "Категорії";// витягується в html коді
             return View(model); // йде в папку View/Categories/Index.cshtml і виводить там прописаний html
             
         }
@@ -49,36 +50,69 @@ namespace Web1.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Edit(CategoryEntity entity)
+        public async Task<IActionResult> Edit(int id)
         {
-            var item = await context.Categories.SingleOrDefaultAsync(x => x.Id == entity.Id);
+            var entity = await context.Categories.SingleOrDefaultAsync(x => x.Id == id);
+            if(entity == null)
+            {
+                return NotFound();
+            }
+            // динамічна колекція, яка зберігає динамічні дані, які можна використати на View
+            //ViewBag.ImageName = category.ImageUrl;
+
+            //TempData["ImageUrl"] = category.ImageUrl;
+
             var model = mapper.Map<CategoryEditViewModel>(entity);
             return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> Edit(CategoryEditViewModel model)
         {
-            var item = await context.Categories.SingleOrDefaultAsync(x => x.Name == model.Name && x.Id != model.Id);
-            if (item != null)
+
+            if (!ModelState.IsValid) // перевірка чи всі дані введено
             {
-                ModelState.AddModelError("Name", "Така категорія уже є");
                 return View(model);
             }
-            var toEdit = await context.Categories.SingleOrDefaultAsync(x => x.Id == model.Id);
-            if(toEdit != null)
+            var existing = await context.Categories.FirstOrDefaultAsync(x => x.Id == model.Id);
+            if (existing == null)
             {
-                toEdit.Name = model.Name;
-                toEdit.Description = model.Description;
-                toEdit.ImageUrl = model.ImageUrl;
-                await context.SaveChangesAsync();
+                return NotFound();
             }
-            else
+
+            var duplicate = await context.Categories.FirstOrDefaultAsync(x => x.Id == model.Id && x.Name != model.Name);
+            if (duplicate != null)
+            {
+                ModelState.AddModelError("Name", "Така категорія уже існує");
                 return View(model);
-            return RedirectToAction(nameof(Index)); 
+            }
+
+            existing = mapper.Map(model, existing);
+
+            if (model.ImageFile != null)
+            {
+                await imageService.DeleteImageAsync(existing.ImageUrl);
+                existing.ImageUrl = await imageService.SaveImageAsync(model.ImageFile);
+            }
+            await context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> Delete(CategoryEntity entity)
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
         {
-            context.Categories.Remove(entity);
+            var category = await context.Categories.SingleOrDefaultAsync(x => x.Id == id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            if (!string.IsNullOrEmpty(category.ImageUrl))
+            {
+                await imageService.DeleteImageAsync(category.ImageUrl);
+            }
+
+            context.Categories.Remove(category);
             await context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
