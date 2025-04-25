@@ -1,0 +1,39 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Web1.Models.User;
+
+public class UserCreateViewModel
+{
+    [Display(Name = "Ваше ім'я")]
+    [DataType(DataType.Text)]
+    [Required(ErrorMessage = "Ім'я обов'язкове")]
+    public string Name { get; set; } = String.Empty;
+
+    [Display(Name = "Ваше прізвище")]
+    [DataType(DataType.Text)]
+    [Required(ErrorMessage = "Нікнейм обов'язковий")]
+    public string Nickname { get; set; } = String.Empty;
+
+    [Display(Name = "Ваше ім'я")]
+    [DataType(DataType.Text)]
+    [Required(ErrorMessage = "Прізвище обов'язкове")]
+    public string Surname { get; set; } = String.Empty;
+
+    [Display(Name = "Ваша пошта")]
+    [DataType(DataType.EmailAddress)]
+    [Required(ErrorMessage = "Пошта обов'язкова")]
+    public string Email { get; set; } = String.Empty;
+
+    [Display(Name = "Пароль до акаунту")]
+    [DataType(DataType.Password)]
+    [Required(ErrorMessage = "Пароль обов'язковий")]
+    public string Password { get; set; } = String.Empty;
+
+    [Display(Name = "Ваш номер телефону")]
+    [DataType(DataType.PhoneNumber)]
+    [Required(ErrorMessage = "Номер телефону обов'язковий")]
+    public string Phone { get; set; } = String.Empty;
+
+    [Display(Name = "Оберіть заставку")]
+    public IFormFile? ImageFile { get; set; } = null;
+}
