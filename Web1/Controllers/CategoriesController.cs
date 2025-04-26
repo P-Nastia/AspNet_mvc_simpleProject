@@ -19,7 +19,13 @@ namespace Web1.Controllers
             model = model.OrderBy(x => x.Id).ToList();
             ViewBag.Title = "Категорії";// витягується в html коді
             return View(model); // йде в папку View/Categories/Index.cshtml і виводить там прописаний html
-            
+        }
+
+        public IActionResult UserIndex() 
+        {
+            var model = mapper.ProjectTo<CategoryItemViewModel>(context.Categories).ToList();
+            model = model.OrderBy(x => x.Id).ToList();
+            return View(model);
         }
 
         [HttpGet] // тепер функція працює методом GET, щоби побачити форму,якщо не вказувати, то він може бути будь-яким методом
@@ -47,7 +53,6 @@ namespace Web1.Controllers
             await context.SaveChangesAsync();
             return RedirectToAction(nameof(Index)); // переадресація на головну сторінку
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)

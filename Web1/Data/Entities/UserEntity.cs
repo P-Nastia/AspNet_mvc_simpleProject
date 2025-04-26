@@ -1,8 +1,9 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Web1.Data.Entities;
 
+[Table("tbl_users")]
 public class UserEntity
 {
     [Key]
@@ -31,4 +32,7 @@ public class UserEntity
     public string Phone { get; set; } = String.Empty;
 
     public string ImageUrl { get; set; } = String.Empty;
+
+    [Required, StringLength(20)]
+    public string Role { get; set; } = String.Empty;
 }

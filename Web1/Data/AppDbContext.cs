@@ -8,4 +8,5 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> opt) : base(opt) { }
 
     public DbSet<CategoryEntity> Categories { get; set; }
+    public DbSet<UserEntity> Users { get; set; }
 }

@@ -1,0 +1,62 @@
+[
+  {
+    "Name": "admin",
+    "Surname": "admin",
+    "Nickname": "admin",
+    "Email": "nastyapivza1999@gmail.com",
+    "Password": "admin123",
+    "Phone": "+380976856746",
+    "Role": "admin",
+    "Image": "adminIcon.png"
+  },
+  {
+    "Name": "Наталія",
+    "Surname": "Гриценко",
+    "Nickname": "natalie_g",
+    "Email": "natalia.grytsenko@example.com",
+    "Password": "NatGry2024!",
+    "Phone": "+380501112233",
+    "Role": "user",
+    "Image": "user2.jpg"
+  },
+  {
+    "Name": "Владислав",
+    "Surname": "Лисенко",
+    "Nickname": "vlad_l",
+    "Email": "vlad.lysenko@example.com",
+    "Password": "VladSecure1!",
+    "Phone": "+380661234567",
+    "Role": "user",
+    "Image": "user1.jpg"
+  },
+  {
+    "Name": "Марина",
+    "Surname": "Кравчук",
+    "Nickname": "marina_k",
+    "Email": "marina.kravchuk@example.com",
+    "Password": "Marina2025*",
+    "Phone": "+380931112244",
+    "Role": "user",
+    "Image": "user4.jpg"
+  },
+  {
+    "Name": "Богдан",
+    "Surname": "Семенюк",
+    "Nickname": "bogdan_s",
+    "Email": "bogdan.semenyuk@example.com",
+    "Password": "Bogdan_321!",
+    "Phone": "+380681234789",
+    "Role": "user",
+    "Image": "user3.jpg"
+  },
+  {
+    "Name": "Олеся",
+    "Surname": "Черненко",
+    "Nickname": "olesya_ch",
+    "Email": "olesya.chernenko@example.com",
+    "Password": "Olesya2025!",
+    "Phone": "+380991110022",
+    "Role": "user",
+    "Image": "user5.jpg"
+  }
+]

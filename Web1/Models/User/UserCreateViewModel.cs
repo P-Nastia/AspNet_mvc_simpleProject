@@ -9,12 +9,12 @@ public class UserCreateViewModel
     [Required(ErrorMessage = "Ім'я обов'язкове")]
     public string Name { get; set; } = String.Empty;
 
-    [Display(Name = "Ваше прізвище")]
+    [Display(Name = "Ваш псевдонім")]
     [DataType(DataType.Text)]
     [Required(ErrorMessage = "Нікнейм обов'язковий")]
     public string Nickname { get; set; } = String.Empty;
 
-    [Display(Name = "Ваше ім'я")]
+    [Display(Name = "Ваше прізвище")]
     [DataType(DataType.Text)]
     [Required(ErrorMessage = "Прізвище обов'язкове")]
     public string Surname { get; set; } = String.Empty;
@@ -35,5 +35,6 @@ public class UserCreateViewModel
     public string Phone { get; set; } = String.Empty;
 
     [Display(Name = "Оберіть заставку")]
+    [Required(ErrorMessage = "Фото обов'язкове")]
     public IFormFile? ImageFile { get; set; } = null;
 }

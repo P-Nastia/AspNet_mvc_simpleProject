@@ -41,7 +41,7 @@ app.MapStaticAssets(); // використання статичних файлів, тобто буде працювати па
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Categories}/{action=Index}/{id?}") // тут викликається контролер при запуску програми
+    pattern: "{controller=Users}/{action=Create}/{id?}") // тут викликається контролер при запуску програми
     .WithStaticAssets();
 
 var dir = builder.Configuration["ImagesDir"];
@@ -53,6 +53,7 @@ app.UseStaticFiles(new StaticFileOptions // надання доступу до папки з фото
     FileProvider = new PhysicalFileProvider(path),
     RequestPath = $"/{dir}" // куди звертатися
 });
+
 
 await app.SeedData();
 
