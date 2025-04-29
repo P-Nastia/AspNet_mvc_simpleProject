@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,6 +7,7 @@ using Web1.Data;
 using Web1.Data.Entities;
 using Web1.Interfaces;
 using Web1.Models.Category;
+using Web1.Constants;
 
 namespace Web1.Controllers
 {
@@ -104,6 +106,8 @@ namespace Web1.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{Roles.Admin}")] // можна буде видаляти лише адміну
+
         public async Task<IActionResult> Delete(int id)
         {
             var category = await context.Categories.SingleOrDefaultAsync(x => x.Id == id);

@@ -1,0 +1,83 @@
+﻿@model CreateViewModel
+
+@{
+    ViewData["Title"] = "Зареєструватися";
+}
+
+<form asp-action="Create" method="post" enctype="multipart/form-data" class="p-4 shadow rounded bg-light my-5" style="max-width: 600px; margin: auto;">
+    <h2 class="mb-4">Створити акаунт</h2>
+    <div class="row g-3">
+        <div class="col-md-6 mb-3">
+            <label asp-for="FirstName" class="form-label"></label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="LastName" class="form-label"></label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-6 mb-3">
+            <label asp-for="UserName" class="form-label"></label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
+    
+    <div class="row g-3">
+        <div class="col-md-6 mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="PhoneNumber" class="form-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+    </div>>
+
+    
+
+    <div class="row">
+        <div class="col-md-3">
+            <img src="/pictures/userDefault.png" id="imagePreview" width="100%" />
+        </div>
+        <div class="col-md-9">
+            <div class="mb-3">
+                <label asp-for="ImageFile" class="form-label"></label>
+                <input asp-for="ImageFile" type="file" class="form-control" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary my-2" style="margin-left:36%;">Зареєструватися</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.getElementById("ImageFile").addEventListener("change",(e) => {
+            console.log("e",e.target.files[0]);
+            const file = e.target.files[0];
+            if(file){
+                document.getElementById("imagePreview").src=URL.createObjectURL(file);
+            }
+        })
+
+    </script>
+}

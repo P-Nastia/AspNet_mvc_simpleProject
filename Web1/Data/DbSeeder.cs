@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using Web1.Data.Entities;
 using Web1.Interfaces;
 using Web1.Models.Seeder;
+using Web1.Constants;
+using Web1.Data.Entities.Identity;
 
 namespace Web1.Data;
 
@@ -12,6 +15,7 @@ public static class DbSeeder
 {
     public static async Task SeedData(this WebApplication webApplication)  // this - розширяє WebApplication, тобто це розширяючий метод
     {
+
         //string str = "Ggsd";
         //str.GetCountItems();// підгрузить створений метод
 
@@ -21,9 +25,51 @@ public static class DbSeeder
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
         var imageService = scope.ServiceProvider.GetRequiredService<IImageService>();
+        
+        context.Database.Migrate();
 
         await SeedCategories(context, mapper, imageService);
-        await SeedUsers(context, mapper, imageService);
+        await SeedRoles(scope, context, mapper, imageService);
+        await SeedUsers(scope,context, mapper, imageService);
+    }
+    private static async Task SeedRoles(IServiceScope scope,AppDbContext context, IMapper mapper, IImageService imageService)
+    {
+        if (!context.Roles.Any())
+        {
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<RoleEntity>>();
+            var admin = new RoleEntity { Name = Roles.Admin };
+
+            var result = await roleManager.CreateAsync(admin);
+
+            if (result.Succeeded)
+            {
+                Console.WriteLine($"Роль {Roles.Admin} створено успішно");
+            }
+            else
+            {
+                Console.WriteLine($"Помилка створення ролі:");
+                foreach (var error in result.Errors)
+                {
+                    Console.WriteLine($"- {error.Code}: {error.Description}");
+                }
+            }
+
+            var user = new RoleEntity { Name = Roles.User };
+            result = await roleManager.CreateAsync(user);
+
+            if (result.Succeeded)
+            {
+                Console.WriteLine($"Роль {Roles.Admin} створено успішно");
+            }
+            else
+            {
+                Console.WriteLine($"Помилка створення ролі:");
+                foreach (var error in result.Errors)
+                {
+                    Console.WriteLine($"- {error.Code}: {error.Description}");
+                }
+            }
+        }
     }
     private static async Task SeedCategories(AppDbContext context,IMapper mapper,IImageService imageService)
     {
@@ -41,6 +87,11 @@ public static class DbSeeder
                 {
                     var categories = JsonSerializer.Deserialize<List<SeederCategoryModel>>(jsonData);
                     var categoryEntities = mapper.Map<List<CategoryEntity>>(categories);
+                    var startPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "pictures");
+                    for (int i = 0; i < categories.Count; i++)
+                    {
+                        categoryEntities[i].ImageUrl = await imageService.SaveImageAsync(FormFileFromPath($"{startPath}\\{categories[i].Image}"));
+                    }
                     await context.AddRangeAsync(categoryEntities);
                     await context.SaveChangesAsync();
                 }
@@ -56,13 +107,39 @@ public static class DbSeeder
         }
     }
 
-    private static async Task SeedUsers(AppDbContext context, IMapper mapper,IImageService imageService)
+    private static async Task SeedUsers(IServiceScope scope, AppDbContext context, IMapper mapper,IImageService imageService)
     {
-        context.Database.Migrate();
-
+        
         if (!context.Users.Any())
         {
-            
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
+
+            string email = "admin@gmail.com";
+            var user = new UserEntity
+            {
+                UserName = email,
+                Email = email,
+                LastName = "Марко",
+                FirstName = "Онутрій",
+                Image = "j0ieqvrx.m3a"
+            };
+
+            var result = await userManager.CreateAsync(user, "123456");
+            if (result.Succeeded)
+            {
+                Console.WriteLine($"Користувача успішно створено {user.LastName} {user.FirstName}!");
+                await userManager.AddToRoleAsync(user, Roles.Admin);
+            }
+            else
+            {
+                Console.WriteLine($"Помилка створення користувача:");
+                foreach (var error in result.Errors)
+                {
+                    Console.WriteLine($"- {error.Code}: {error.Description}");
+                }
+            }
+
+
             var jsonFile = Path.Combine(Directory.GetCurrentDirectory(), "Helpers", "JsonData", "Users.json");
 
             if (File.Exists(jsonFile))
@@ -73,12 +150,27 @@ public static class DbSeeder
                     var users = JsonSerializer.Deserialize<List<SeederUserModel>>(jsonData);
                     var userEntities = mapper.Map<List<UserEntity>>(users);
                     var startPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "pictures");
+                    
                     for(int i = 0; i < users.Count; i++)
                     {
-                        userEntities[i].ImageUrl = await imageService.SaveImageAsync(FormFileFromPath($"{startPath}\\{users[i].Image}"));
+                        userEntities[i].Image = await imageService.SaveImageAsync(FormFileFromPath($"{startPath}\\{users[i].Image}"));
+
+                        result = await userManager.CreateAsync(userEntities[i], users[i].Password);
+                        if (result.Succeeded)
+                        {
+                            Console.WriteLine($"Користувача успішно створено {userEntities[i].LastName} {userEntities[i].FirstName}!");
+                            await userManager.AddToRoleAsync(userEntities[i], Roles.User);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Помилка створення користувача:");
+                            foreach (var error in result.Errors)
+                            {
+                                Console.WriteLine($"- {error.Code}: {error.Description}");
+                            }
+                        }
                     }
-                    await context.AddRangeAsync(userEntities);
-                    await context.SaveChangesAsync();
+                    
                 }
                 catch (Exception ex)
                 {
@@ -90,7 +182,6 @@ public static class DbSeeder
                 Console.WriteLine("Not found file Users.json");
             }
         }
-
     }
 
     private static IFormFile FormFileFromPath(string filePath)

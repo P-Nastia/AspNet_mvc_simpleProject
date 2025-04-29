@@ -1,0 +1,32 @@
+﻿
+@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Увійти";
+}
+
+@* @{
+    Layout = "_EnterPageLayout";
+}
+ *@
+
+<form asp-action="Login" method="post" enctype="multipart/form-data" class="p-4 shadow rounded bg-light my-5" style="max-width: 400px; margin: auto;">
+    <h2 class="mb-4">Увійти в акаунт</h2>
+    
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input type="email" asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input type="password" asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary my-2" style="margin-left:42%;">Увійти</button>
+</form>
+

@@ -1,0 +1,88 @@
+﻿@model ProfileViewModel
+
+@{
+    ViewData["Title"] = "Профіль";
+}
+
+<div class="container">
+    <div class="container">
+
+        <form asp-action="Edit" enctype="multipart/form-data" class="p-4 shadow rounded bg-light my-5" style="max-width: 600px; margin: auto;">
+            <h4 class="mb-4">Профіль користувача</h4>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input asp-for="ViewImage" type="hidden">
+
+            <div class="d-flex justify-content-center mb-3">
+                <img src="@Model.ViewImage" class="rounded-circle " id="imagePreview" style="height:100px; width:auto;" />
+            </div>
+            @* <div class="align-content-center">
+                <div class="mb-3">
+                    <label asp-for="ImageFile" class="form-label"></label>
+                    <input readonly asp-for="ImageFile" class="form-control" accept="image/*" type="file">
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+
+                </div>
+            </div> *@
+            <div class="text-center mb-3">
+                <label asp-for="UserName" class="form-label"></label>
+                <input style="width:fit-content" readonly asp-for="UserName" class="form-control mx-auto" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input readonly asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input readonly asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="row g-3">
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="PhoneNumber" class="form-label"></label>
+                    <input readonly asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input readonly asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+
+            @* <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Зберегти зміни" />
+            </div> *@
+
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.getElementById("ImageFile").addEventListener("change",(e) => {
+            console.log("e",e.target.files[0]);
+            const file = e.target.files[0];
+            if(file){
+                document.getElementById("imagePreview").src=URL.createObjectURL(file);
+            }
+        })
+
+    </script>
+}

@@ -2,7 +2,11 @@
 
 <div class="container mt-5">
     <h2 class="text-center mb-4">Категорії</h2>
-    <a href="@Url.Action("Create")" class="btn btn-success">Додати</a>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <a href="@Url.Action("Create")
+        " class="btn btn-success">Додати</a>
+    }
     <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach (var item in Model)
         {
@@ -15,15 +19,17 @@
                         <h5 class="card-title">@item.Name</h5>
                         <p class="card-text">@item.Description</p>
                     </div>
-
-                    <div class="position-absolute top-0 end-2 delete-btn">
-                        <button class="btn" data-bs-toggle="modal" data-bs-target="#@modalId">
-                            <img src="https://cdn-icons-png.flaticon.com/512/5820/5820762.png" alt="Edit" style="width: 24px; height: 24px;">
-                        </button>
-                    </div>
-                    <a asp-route-id="@item.Id" asp-action="Edit" class="position-absolute top-0 end-0 m-2">
-                        <img src="https://cdn-icons-png.flaticon.com/512/4226/4226577.png" alt="Edit" style="width: 24px; height: 24px;">
-                    </a>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                    {
+                        <div class="position-absolute top-0 end-2 delete-btn">
+                            <button class="btn" data-bs-toggle="modal" data-bs-target="#@modalId">
+                                <img src="https://cdn-icons-png.flaticon.com/512/5820/5820762.png" alt="Edit" style="width: 24px; height: 24px;">
+                            </button>
+                        </div>
+                        <a asp-route-id="@item.Id" asp-action="Edit" class="position-absolute top-0 end-0 m-2">
+                            <img src="https://cdn-icons-png.flaticon.com/512/4226/4226577.png" alt="Edit" style="width: 24px; height: 24px;">
+                        </a>
+                    }
                 </div>
             </div>
 

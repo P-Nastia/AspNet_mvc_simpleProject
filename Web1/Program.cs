@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Web1.Data;
 using Web1.Interfaces;
 using Web1.Services;
+using Web1.Data.Entities.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,24 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
         opt.UseNpgsql(builder.Configuration.GetConnectionString("MyConnection")));
+
+
+//додаємо налаштування для UserManager і RoleManager і SignInManager -- займається cookies
+
+builder.Services.AddIdentity<UserEntity, RoleEntity>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    //тут опис який має бути пароль
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 1;
+})
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+//////////////////////////////
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());// реєстрація AutoMapper
 builder.Services.AddScoped<IImageService, ImageService>();
@@ -41,7 +61,7 @@ app.MapStaticAssets(); // використання статичних файлів, тобто буде працювати па
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Users}/{action=Create}/{id?}") // тут викликається контролер при запуску програми
+    pattern: "{controller=Categories}/{action=Index}/{id?}") // тут викликається контролер при запуску програми
     .WithStaticAssets();
 
 var dir = builder.Configuration["ImagesDir"];
