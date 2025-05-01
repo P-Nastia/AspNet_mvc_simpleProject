@@ -1,0 +1,12 @@
+﻿@model UserLinkViewModel
+
+<li class="nav-item">
+    <a class="nav-link" asp-action="Profile" asp-controller="Account">@Model.Name</a>
+</li>
+<li class="nav-item">
+
+    <a asp-route-id="@Model.Id" asp-action="Profile" asp-controller="Account">
+        <img class="nav-link rounded-circle" alt="@Model.Name" 
+        style="width:auto;height:3rem" src="/images/50_@Model.Image">
+    </a>
+</li>

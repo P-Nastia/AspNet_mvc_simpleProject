@@ -58,8 +58,6 @@ namespace Web1.Controllers
                     var res = await signInManager.PasswordSignInAsync(user, model.Password, false, false);// false - 1 чи запам'ятовувати і 2 чи заблокований 
                     if (res.Succeeded)
                     {
-                        await userManager.AddClaimAsync(user, new Claim("UserAvatar", user.Image));
-                        await userManager.AddClaimAsync(user, new Claim("UserId", user.Id.ToString()));
                         await signInManager.SignInAsync(user, isPersistent: false);
                         return Redirect("/");// перехід на головну сторінку
                     }
@@ -91,13 +89,6 @@ namespace Web1.Controllers
                 var res = await signInManager.PasswordSignInAsync(user, model.Password, false, false);// false - 1 чи запам'ятовувати і 2 чи заблокований 
                 if (res.Succeeded)
                 {
-                    var claims = await userManager.GetClaimsAsync(user);
-                    var toRemoveClaims = claims.ToList().Where(x => x.Type == "UserAvatar" || x.Type == "UserId");
-                    await userManager.RemoveClaimsAsync(user, toRemoveClaims);
-                    claims = await userManager.GetClaimsAsync(user);
-                    await userManager.AddClaimAsync(user, new Claim("UserAvatar", user.Image!));
-                    await userManager.AddClaimAsync(user, new Claim("UserId", user.Id.ToString()));
-
                     await signInManager.SignInAsync(user, isPersistent: false);
 
                     return Redirect("/");// перехід на головну сторінку

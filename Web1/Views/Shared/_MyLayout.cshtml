@@ -40,21 +40,10 @@
                     </ul>
                     @if (User.Identity.IsAuthenticated && Model != null)
                     { //якщо користувач увійшов в акаунт
-                        var avatar = User.Claims.FirstOrDefault(x => x.Type == "UserAvatar")?.Value;
-                        var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+                        
                         <ul class="navbar-nav">
+                            @await Component.InvokeAsync("UserLink") @* підтягує модель-(partial) *@
 
-                            <li class="nav-item">
-                                <a class="nav-link" asp-route-id="@id" asp-action="Profile" asp-controller="Account">@User.Identity.Name</a>
-                            </li>
-                            
-                                <li class="nav-item">
-                                    <a asp-route-id="@id" asp-action="Profile" asp-controller="Account">
-                                        <img class="nav-link rounded-circle" style="width:auto;height:3rem" src="/images/400_@avatar">
-
-                                    </a>
-                                </li>
-                            
                             <li class="nav-item">
                                 @using (Html.BeginForm("Logout", "Account", FormMethod.Post))
                                 {//щоби дойшло до виходу в контролері

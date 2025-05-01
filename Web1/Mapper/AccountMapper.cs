@@ -20,5 +20,9 @@ public class AccountMapper : Profile
             string.IsNullOrEmpty(x.Image) ? "/pictures/default.png" : $"/images/400_{x.Image}"))
             .ForMember(x => x.ImageFile, opt => opt.Ignore())
             .ReverseMap(); // і туди і назад mapping;
+
+        CreateMap<UserEntity, UserLinkViewModel>()
+                .ForMember(x => x.Name, opt => opt.MapFrom(x => $"{x.LastName} {x.FirstName}"))
+                .ForMember(x => x.Image, opt => opt.MapFrom(x => x.Image ?? $"default.webp"));
     }
 }
