@@ -5,6 +5,7 @@ using Web1.Data;
 using Web1.Interfaces;
 using Web1.Services;
 using Web1.Data.Entities.Identity;
+using Web1.Areas.Admin.Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,7 @@ builder.Services.AddIdentity<UserEntity, RoleEntity>(options =>
 //////////////////////////////
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());// реєстрація AutoMapper
+builder.Services.AddAutoMapper(typeof(UserMapper));
 builder.Services.AddScoped<IImageService, ImageService>();
 
 // будуть View - сторінки, де можна писати на c# (exp - Index.cshtml)
@@ -59,10 +61,23 @@ app.MapStaticAssets(); // використання статичних файлів, тобто буде працювати па
 // для того, щоби при запуску сайту ми бачили щось, воно визивається згідно налатувань HomeController
 // і його метод index, при цьому може бути параметр у маршруті id - але там є знак питання (?) - тобто може бути null
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Categories}/{action=Index}/{id?}") // тут викликається контролер при запуску програми
-    .WithStaticAssets();
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Categories}/{action=Index}/{id?}") // тут викликається контролер при запуску програми
+//    .WithStaticAssets();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapAreaControllerRoute(
+      name: "admin_area",
+      areaName: "Admin",
+      pattern: "admin/{controller=Home}/{action=Index}/{id?}"
+    );
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Categories}/{action=Index}/{id?}"
+    );
+});
 
 var dir = builder.Configuration["ImagesDir"];
 string path = Path.Combine(Directory.GetCurrentDirectory(), dir);

@@ -1,7 +1,7 @@
 ﻿@model UserLinkViewModel
 
 <li class="nav-item">
-    <a class="nav-link" asp-action="Profile" asp-controller="Account">@Model.Name</a>
+    <a class="nav-link" asp-route-id="@Model.Id" asp-action="Profile" asp-controller="Account">@Model.Name</a>
 </li>
 <li class="nav-item">
 

@@ -23,12 +23,6 @@ namespace Web1.Controllers
             return View(model); // йде в папку View/Categories/Index.cshtml і виводить там прописаний html
         }
 
-        public IActionResult UserIndex() 
-        {
-            var model = mapper.ProjectTo<CategoryItemViewModel>(context.Categories).ToList();
-            model = model.OrderBy(x => x.Id).ToList();
-            return View(model);
-        }
 
         [HttpGet] // тепер функція працює методом GET, щоби побачити форму,якщо не вказувати, то він може бути будь-яким методом
         public IActionResult Create()

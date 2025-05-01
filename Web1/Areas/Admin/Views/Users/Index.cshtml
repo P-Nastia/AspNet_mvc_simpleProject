@@ -1,0 +1,53 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_PanelLayout.cshtml";
+}
+@model List<UserItemViewModel>
+
+<div  class="d-flex justify-content-center align-items-center min-vh-100">
+    <div class="container p-4 border border-primary rounded shadow-lg">
+        <div class="card">
+            
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped bg-black table-hover table-bordered align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col" class="text-center">#</th>
+                                <th scope="col" class="text-center">Username</th>
+                                <th scope="col" class="text-center">Icon</th>
+                                <th scope="col" class="text-center">First Name</th>
+                                <th scope="col" class="text-center">Last Name</th>
+                                <th scope="col" class="text-center">Email</th>
+                                <th scope="col" class="text-center">Phone Number</th>
+                                <th scope="col" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <th scope="row" class="text-center">@item.Id</th>
+                                    <td class="text-center">@item.UserName</td>
+                                    <td class="text-center"><img class="rounded-circle" style="width:auto;height:3rem" src="/images/200_@item.Image" /></td>
+                                    <td class="text-center">@item.FirstName</td>
+                                    <td class="text-center">@item.LastName</td>
+                                    <td class="text-center">@item.Email</td>
+                                    <td class="text-center">@item.PhoneNumber</td>
+                                    
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-warning me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit User">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete User">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
