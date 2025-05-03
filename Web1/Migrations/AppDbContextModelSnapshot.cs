@@ -159,7 +159,7 @@ namespace Web1.Migrations
                     b.ToTable("tbl_сategories");
                 });
 
-            modelBuilder.Entity("WebSmonder.Data.Entities.Identity.RoleEntity", b =>
+            modelBuilder.Entity("Web1.Data.Entities.Identity.RoleEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -188,7 +188,7 @@ namespace Web1.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("WebSmonder.Data.Entities.Identity.UserEntity", b =>
+            modelBuilder.Entity("Web1.Data.Entities.Identity.UserEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -267,7 +267,7 @@ namespace Web1.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("WebSmonder.Data.Entities.Identity.UserRoleEntity", b =>
+            modelBuilder.Entity("Web1.Data.Entities.Identity.UserRoleEntity", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserRole<int>");
 
@@ -278,7 +278,7 @@ namespace Web1.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("WebSmonder.Data.Entities.Identity.RoleEntity", null)
+                    b.HasOne("Web1.Data.Entities.Identity.RoleEntity", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -287,7 +287,7 @@ namespace Web1.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.HasOne("WebSmonder.Data.Entities.Identity.UserEntity", null)
+                    b.HasOne("Web1.Data.Entities.Identity.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -296,7 +296,7 @@ namespace Web1.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.HasOne("WebSmonder.Data.Entities.Identity.UserEntity", null)
+                    b.HasOne("Web1.Data.Entities.Identity.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -305,22 +305,22 @@ namespace Web1.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("WebSmonder.Data.Entities.Identity.UserEntity", null)
+                    b.HasOne("Web1.Data.Entities.Identity.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WebSmonder.Data.Entities.Identity.UserRoleEntity", b =>
+            modelBuilder.Entity("Web1.Data.Entities.Identity.UserRoleEntity", b =>
                 {
-                    b.HasOne("WebSmonder.Data.Entities.Identity.RoleEntity", "Role")
+                    b.HasOne("Web1.Data.Entities.Identity.RoleEntity", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebSmonder.Data.Entities.Identity.UserEntity", "User")
+                    b.HasOne("Web1.Data.Entities.Identity.UserEntity", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -331,12 +331,12 @@ namespace Web1.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WebSmonder.Data.Entities.Identity.RoleEntity", b =>
+            modelBuilder.Entity("Web1.Data.Entities.Identity.RoleEntity", b =>
                 {
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("WebSmonder.Data.Entities.Identity.UserEntity", b =>
+            modelBuilder.Entity("Web1.Data.Entities.Identity.UserEntity", b =>
                 {
                     b.Navigation("UserRoles");
                 });

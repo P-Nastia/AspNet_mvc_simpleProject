@@ -33,7 +33,7 @@ builder.Services.AddIdentity<UserEntity, RoleEntity>(options =>
 //////////////////////////////
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());// реєстрація AutoMapper
-builder.Services.AddAutoMapper(typeof(UserMapper));
+
 builder.Services.AddScoped<IImageService, ImageService>();
 
 // будуть View - сторінки, де можна писати на c# (exp - Index.cshtml)

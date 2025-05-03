@@ -1,0 +1,124 @@
+﻿
+@model UserEditViewModel
+
+
+<div class="card-body pt-0">
+    <form asp-action="Edit" id="formAccountSettings" method="post" enctype="multipart/form-data">
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="mb-3 text-center">
+                    <label asp-for="ImageFile" class="d-block">
+                        <img id="defaultAvatar"
+                             src="/pictures/default.png"
+                             alt="Аватар"
+                             class="rounded-circle border"
+                             style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;" />
+
+                        <div id="croppedPreview"
+                             class="rounded-circle border d-none mx-auto"
+                             style="width: 150px; height: 150px; object-fit: cover; overflow: hidden; cursor: pointer"></div>
+                    </label>
+
+                    <input asp-for="ImageFile"
+                           type="file"
+                           id="ImageFile"
+                           accept="image/*"
+                           class="d-none" />
+                    <input type="hidden" id="croppedImageData" name="CroppedImage" />
+                </div>
+
+                @await Html.PartialAsync("_ImageCropper")
+            </div>
+        </div>
+        <div class="row mt-1 g-5">
+            <div class="col-md-6">
+                <div class="form-floating form-floating-outline">
+                    <input asp-for="FirstName" class="form-control" type="text" />
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating form-floating-outline">
+                    <input asp-for="LastName" class="form-control" type="text"  />
+                    <label asp-for="LastName" class="form-label"></label>
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating form-floating-outline">
+                    <input asp-for="UserName" class="form-control" type="text" placeholder="user_name" />
+                    <label asp-for="UserName" class="form-label"></label>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating form-floating-outline">
+                    <input asp-for="Password" id="passwordCheck" class="form-control" type="password"  />
+                    <label asp-for="Password" class="form-label"></label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating form-floating-outline">
+                    <input disabled asp-for="Password" id="newPassword" class="form-control" type="password"  />
+                    <label asp-for="Password" class="form-label">New Password</label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating form-floating-outline">
+                    <input asp-for="Email" class="form-control" type="text" placeholder="john.doe&#64@example.com" />
+                    <label asp-for="Email" class="form-label"></label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group input-group-merge">
+                    <div class="form-floating form-floating-outline">
+                        <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="+380 00 00 00 000" />
+                        <label asp-for="PhoneNumber" class="form-label"></label>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            @for (int i = 0; i < Model.Roles.Count; i++)
+            {
+                var role = Model.Roles[i];
+                var isChecked = Model.SelectedRoles.Contains(role);
+
+                <div>
+                    <input type="checkbox"
+                           name="SelectedRoles"
+                           value="@role"
+                    @(isChecked ? "checked" : "") />
+                    <label>@role</label>
+                </div>
+            }
+        </div>
+        <div class="mt-6">
+            <button type="submit" class="btn btn-primary me-3">Save changes</button>
+            <button type="reset" class="btn btn-outline-secondary">Reset</button>
+        </div>
+    </form>
+
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="/js/cropper.min.js"></script>
+    <script src="/js/cropImageOnForm.js"></script>
+
+    <script>
+            document.addEventListener("DOMContentLoaded", function () {
+            let croppingImage = document.getElementById("croppingImage");
+            console.log("croppingImage", croppingImage);
+            croppingImage.hidden=true;
+            
+        });
+    </script>
+}
