@@ -1,21 +1,16 @@
 ﻿
 @model UserEditViewModel
 
-@* <style> *@
-@*     .cropper-hidden { *@
-@*         display: none !important; *@
-@*     } *@
-@* </style> *@
-
 <div class="card-body pt-0">
     <form asp-action="Edit" id="formAccountSettings" method="post" enctype="multipart/form-data">
         <div class="card-body">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
             <div class="row">
         <div class="mb-3 text-center">
+                    
             <label asp-for="ImageFile" class="d-block">
                 <img id="defaultAvatar"
-                     src="/pictures/default.png"
+                     src="@Model.ViewImage"
                      alt="Аватар"
                      class="rounded-circle border"
                      style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;" />
@@ -25,6 +20,7 @@
                      style="width: 150px; height: 150px; object-fit: cover; overflow: hidden; cursor: pointer"></div>
             </label>
 
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input asp-for="ImageFile"
                    type="file"
                    id="ImageFile"
@@ -59,15 +55,8 @@
             </div>
             <div class="col-md-6">
                 <div class="form-floating form-floating-outline">
-                    <input asp-for="Password" id="passwordCheck" class="form-control" type="password"  />
+                    <input asp-for="Password" class="form-control" type="password" />
                     <label asp-for="Password" class="form-label"></label>
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-floating form-floating-outline">
-                    <input disabled asp-for="Password" id="newPassword" class="form-control" type="password"  />
-                    <label asp-for="Password" class="form-label">New Password</label>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
             </div>
@@ -112,5 +101,15 @@
 
 @section PageScripts {
     <script src="/js/cropper.min.js"></script>
-    <script src="/js/cropImageOnUser.js"></script>
+    <script src="/js/cropImageOnForm.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.getElementById("ImageFile").addEventListener("change", (e) => {
+            const file = e.target.files[0]; // Перший вибраний файл
+            if(file)
+                document.getElementById("imagePreview").src=URL.createObjectURL(file);
+        })
+    </script>
 }

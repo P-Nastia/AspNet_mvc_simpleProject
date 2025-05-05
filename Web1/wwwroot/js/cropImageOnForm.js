@@ -2,28 +2,22 @@
 let defaultAvatar, croppedPreview;
 
 document.addEventListener("DOMContentLoaded", function () {
+
+
     input = document.getElementById("ImageFile");
-    console.log("input:", input);
-    image = document.getElementById("croppingImage");
-    image.src = null;
-    console.log("image:", image);
     croppedDataInput = document.getElementById("croppedImageData");
-    console.log("croppedDataInput:", croppedDataInput);
     cropContainer = document.getElementById("imageCropContainer");
-    console.log("imageCropContainer:", imageCropContainer);
 
     defaultAvatar = document.getElementById("defaultAvatar");
-    console.log("defaultAvatar:", defaultAvatar);
     croppedPreview = document.getElementById("croppedPreview");
-    console.log("croppedPreview:", croppedPreview);
 
     input.addEventListener("change", function () {
         const file = this.files[0];
         if (file && /^image\/\w+/.test(file.type)) {
             const url = URL.createObjectURL(file);
+            image = document.getElementById("croppingImage");
             image.src = url;
             cropContainer.style.display = "block";
-            image.style.display = "block";
 
             defaultAvatar.classList.add("d-none");
             croppedPreview.classList.remove("d-none");

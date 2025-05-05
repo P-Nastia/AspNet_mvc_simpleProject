@@ -27,7 +27,7 @@ public class UserEditViewModel
     [EmailAddress(ErrorMessage = "Пошту вказано не правильно")]
     public string Email { get; set; } = String.Empty;
 
-    [Display(Name = "Пароль до акаунту")]
+    [Display(Name = "Новий пароль до акаунту")]
     [DataType(DataType.Password)]
     public string Password { get; set; } = String.Empty;
 
@@ -38,7 +38,6 @@ public class UserEditViewModel
     public string PhoneNumber { get; set; } = String.Empty;
 
     [Display(Name = "Оберіть заставку")]
-    [Required(ErrorMessage = "Фото обов'язкове")]
     public IFormFile? ImageFile { get; set; } = null;
     public string? ViewImage { get; set; } = string.Empty;
     public List<string> SelectedRoles { get; set; } = new List<string>();
