@@ -19,7 +19,7 @@ public class UsersController(UserManager<UserEntity> userManager,
     public async Task<IActionResult> Index()
     {
         var model = await userManager.Users.ProjectTo<UserItemViewModel>(mapper.ConfigurationProvider).ToListAsync();
-        
+        model = model.OrderBy(x => x.Id).ToList();
         return View(model);
     }
 
