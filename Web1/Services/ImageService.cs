@@ -32,6 +32,13 @@ namespace Web1.Services
             await Task.WhenAll(tasks);
         }
 
+        public async Task<string> SaveImageFromUrlAsync(string imageUrl)
+        {
+            using var httpClient = new HttpClient();
+            var imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
+            return await SaveImageAsync(imageBytes);
+        }
+
         public async Task<string> SaveImageAsync(IFormFile file)
         {
             using MemoryStream ms = new();

@@ -31,6 +31,64 @@ public static class DbSeeder
         await SeedCategories(context, mapper, imageService);
         await SeedRoles(scope, context, mapper, imageService);
         await SeedUsers(scope,context, mapper, imageService);
+
+        if (!context.Products.Any())
+        {
+            var jsonFile = Path.Combine(Directory.GetCurrentDirectory(), "Helpers", "JsonData", "Products.json");
+
+            if (File.Exists(jsonFile))
+            {
+                var jsonData = await File.ReadAllTextAsync(jsonFile);
+                try
+                {
+                    var products = JsonSerializer.Deserialize<List<SeederProductModel>>(jsonData);
+
+                    foreach (var product in products)
+                    {
+                        // Знайти відповідну категорію
+                        var category = await context.Categories
+                            .FirstOrDefaultAsync(c => c.Name == product.CategoryName);
+
+                        if (category == null)
+                        {
+                            Console.WriteLine($"Category '{product.CategoryName}' not found for product '{product.Name}'");
+                            continue;
+                        }
+
+                        var productEntity = new ProductEntity
+                        {
+                            Name = product.Name,
+                            Description = product.Description,
+                            CategoryId = category.Id,
+                            ProductImages = new List<ProductImageEntity>()
+                        };
+
+                        int priority = 0;
+                        foreach (var imageUrl in product.Images)
+                        {
+                            var savedImageUrl = await imageService.SaveImageFromUrlAsync(imageUrl);
+                            productEntity.ProductImages.Add(new ProductImageEntity
+                            {
+                                Name = savedImageUrl,
+                                Priotity = priority++
+                            });
+                        }
+
+                        await context.Products.AddAsync(productEntity);
+                    }
+
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error Json Parse Product Data: {0}", ex.Message);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Products.json file not found");
+            }
+        }
     }
     private static async Task SeedRoles(IServiceScope scope,AppDbContext context, IMapper mapper, IImageService imageService)
     {
