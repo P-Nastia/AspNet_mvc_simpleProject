@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
@@ -55,16 +56,58 @@ public class ProductsController(AppDbContext context,
 
         productEntity.ProductImages = savedImages.ToList();
 
+        HtmlDocument doc = new HtmlDocument();
+        doc.LoadHtml(productEntity.Description);
+
+        var imgNodes = doc.DocumentNode.SelectNodes("//img");
+
+        if (imgNodes != null)
+        {
+            foreach (var img in imgNodes)
+            {
+                var oldSrc = img.GetAttributeValue("src", "");
+                
+                img.SetAttributeValue("src", $"/images/800_{await imageService.SaveImageFromUrlAsync(oldSrc)}");
+            }
+        }
+
+        productEntity.Description = doc.DocumentNode.OuterHtml;
+
         context.Products.Add(productEntity);
         await context.SaveChangesAsync();
 
         return RedirectToAction(nameof(Index));
     }
 
-    //[HttpPost]
-    //public async Task<IActionResult> Delete(int id)
-    //{
-    //}
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var productEntity = await context.Products.Include(x=>x.ProductImages).FirstOrDefaultAsync(x => x.Id == id);
+        if (productEntity != null)
+        {
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(productEntity.Description);
 
-    
+            var imgNodes = doc.DocumentNode.SelectNodes("//img");
+
+            if (imgNodes != null)
+            {
+                foreach (var img in imgNodes)
+                {
+                    var src = img.GetAttributeValue("src", "");
+
+                    var substr = src.Substring(src.IndexOf('_') + 1, (src.Length - src.IndexOf('_') - 1));
+                    await imageService.DeleteImageAsync(substr);
+                }
+            }
+            foreach(var img in productEntity.ProductImages)
+            {
+                await imageService.DeleteImageAsync(img.Name);
+                context.ProductImages.Remove(img);
+            }
+            context.Products.Remove(productEntity);
+            await context.SaveChangesAsync();
+        }
+        return RedirectToAction(nameof(Index));
+    }
 }
