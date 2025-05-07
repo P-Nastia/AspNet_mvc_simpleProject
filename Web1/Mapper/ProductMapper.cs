@@ -11,5 +11,6 @@ public class ProductMapper : Profile
             .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category.Name))
             .ForMember(x => x.Images, opt => opt.MapFrom(x => x.ProductImages.Select(x=>x.Name)));
 
+
     }
 }
