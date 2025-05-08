@@ -8,6 +8,7 @@ using Web1.Interfaces;
 using Web1.Models.Seeder;
 using Web1.Constants;
 using Web1.Data.Entities.Identity;
+using Web1.SMTP;
 
 namespace Web1.Data;
 
@@ -25,7 +26,22 @@ public static class DbSeeder
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
         var imageService = scope.ServiceProvider.GetRequiredService<IImageService>();
-        
+        var smtpService = scope.ServiceProvider.GetRequiredService<ISMTPService>();
+        webApplication.Use(async (context, next) =>
+        {
+            var host = context.Request.Host.Host;
+
+            Message msgEmail = new Message
+            {
+                Body = $"Додаток успішно запущено {DateTime.Now}",
+                Subject = $"Запуск сайту {host}",
+                To="nastyapivza1999@gmail.com"
+            };
+            Console.WriteLine(host);
+            await smtpService.SendMessage(msgEmail);
+            await next.Invoke();
+        });
+
         context.Database.Migrate();
 
         await SeedCategories(context, mapper, imageService);
@@ -89,6 +105,10 @@ public static class DbSeeder
                 Console.WriteLine("Products.json file not found");
             }
         }
+
+        
+
+        
     }
     private static async Task SeedRoles(IServiceScope scope,AppDbContext context, IMapper mapper, IImageService imageService)
     {

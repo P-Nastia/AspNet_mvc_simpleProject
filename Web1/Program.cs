@@ -35,6 +35,7 @@ builder.Services.AddIdentity<UserEntity, RoleEntity>(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());// реЇстрац≥€ AutoMapper
 
 builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<ISMTPService, SMTPService>();
 
 // будуть View - стор≥нки, де можна писати на c# (exp - Index.cshtml)
 // ф≥шка -- перев≥р€ютьс€ на c# ≥ комп≥люютьс€ у зб≥рку
