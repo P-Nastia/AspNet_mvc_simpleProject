@@ -119,5 +119,11 @@ namespace Web1.Controllers
             var model = mapper.Map<ProfileViewModel>(entity);
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
     }
 }
