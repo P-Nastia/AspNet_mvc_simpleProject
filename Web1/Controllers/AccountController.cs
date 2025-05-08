@@ -9,10 +9,17 @@ using AutoMapper;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Web1.Models.Category;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Net;
+using Web1.Services;
+using Web1.SMTP;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Web1.Controllers
 {
-    public class AccountController(UserManager<UserEntity> userManager,SignInManager<UserEntity> signInManager,IImageService imageService, IMapper mapper) : Controller
+    public class AccountController(UserManager<UserEntity> userManager,
+        SignInManager<UserEntity> signInManager,IImageService imageService,
+        IMapper mapper,ISMTPService sMTPService) : Controller
     {
         [HttpGet]
         public IActionResult Create()
@@ -122,6 +129,68 @@ namespace Web1.Controllers
 
         [HttpGet]
         public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var user = await userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Користувача з такою поштою не існує");
+                return View(model);
+            }
+
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+            var resetUrl = Url.Action(
+                "ResetPassword",// назва дії
+                "Account", // назва контролера
+                new { email = user.Email, token }, // параметри get,  WebUtility.UrlEncode(user.Email) -- щоби в url адресі пропускало всі символи, бо можливо @ заборонений у прямому використанні
+                protocol: Request.Scheme // http, https
+                );
+
+            Message msgEmail = new Message
+            {
+                Body = $"Для скидання паролю перейдіть за посиланням: <a href='{resetUrl}'>скинути пароль</a>",
+                Subject = $"Скидання паролю",
+                To = model.Email
+            };
+            var result = await sMTPService.SendMessageAsync(msgEmail);
+
+            if (!result)
+            {
+                ModelState.AddModelError("", "Помилка надсилання листа. Зверніться у підтримку");
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(ForgotPasswordSend));
+        }
+
+        // відновлення паролю, надіслати лист
+        [HttpGet]
+        public IActionResult ForgotPasswordSend()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ResetPassword(string email, string token)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+            var result = await userManager.ResetPasswordAsync(user, token, "123456");
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ResetPassword(ResetPasswordViewModel model)
         {
             return View();
         }

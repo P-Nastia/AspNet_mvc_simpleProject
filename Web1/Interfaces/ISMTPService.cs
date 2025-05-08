@@ -5,5 +5,5 @@ namespace Web1.Interfaces;
 
 public interface ISMTPService
 {
-    Task<bool> SendMessage(Message message);
+    Task<bool> SendMessageAsync(Message message);
 }

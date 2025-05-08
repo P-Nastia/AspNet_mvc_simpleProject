@@ -10,7 +10,7 @@ namespace Web1.Services;
 public class SMTPService : ISMTPService
 {
 
-    public async Task<bool> SendMessage(Message message)
+    public async Task<bool> SendMessageAsync(Message message)
     {
         //EmailConfiguration config = new EmailConfiguration();
         //string pathFile = @"D:\ss.webp";
@@ -20,7 +20,7 @@ public class SMTPService : ISMTPService
         //    FileName = "Привіт друже",
         //    Content = new MimeContent(File.OpenRead(pathFile))
         //};
-        var body = new TextPart("plain")
+        var body = new TextPart("html")
         {
             Text = message.Body
         };

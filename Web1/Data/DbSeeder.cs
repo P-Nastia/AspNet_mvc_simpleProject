@@ -27,20 +27,20 @@ public static class DbSeeder
         var mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
         var imageService = scope.ServiceProvider.GetRequiredService<IImageService>();
         var smtpService = scope.ServiceProvider.GetRequiredService<ISMTPService>();
-        webApplication.Use(async (context, next) =>
-        {
-            var host = context.Request.Host.Host;
+        //webApplication.Use(async (context, next) =>
+        //{
+        //    var host = context.Request.Host.Host;
 
-            Message msgEmail = new Message
-            {
-                Body = $"Додаток успішно запущено {DateTime.Now}",
-                Subject = $"Запуск сайту {host}",
-                To="nastyapivza1999@gmail.com"
-            };
-            Console.WriteLine(host);
-            await smtpService.SendMessage(msgEmail);
-            await next.Invoke();
-        });
+        //    Message msgEmail = new Message
+        //    {
+        //        Body = $"Додаток успішно запущено {DateTime.Now}",
+        //        Subject = $"Запуск сайту {host}",
+        //        To="nastyapivza1999@gmail.com"
+        //    };
+        //    Console.WriteLine(host);
+        //    await smtpService.SendMessage(msgEmail);
+        //    await next.Invoke();
+        //});
 
         context.Database.Migrate();
 
