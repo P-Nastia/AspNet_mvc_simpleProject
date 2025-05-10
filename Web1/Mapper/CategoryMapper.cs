@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Web1.Data.Entities;
 using Web1.Models.Category;
+using Web1.Models.Helpers;
 using Web1.Models.Seeder;
 
 namespace Web1.Mapper;
@@ -16,10 +17,10 @@ public class CategoryMapper : Profile
 
         CreateMap<CategoryEntity, CategoryEditViewModel>()
             .ForMember(x => x.ViewImage, opt => opt.MapFrom(x => 
-            string.IsNullOrEmpty(x.ImageUrl)?"/pictures/default.png":$"/images/400_{x.ImageUrl}"))
+                 string.IsNullOrEmpty(x.ImageUrl)?"/pictures/default.png":$"/images/400_{x.ImageUrl}"))
             .ForMember(x=>x.ImageFile,opt=>opt.Ignore())
             .ReverseMap(); // і туди і назад mapping;
 
-        //.ReverseMap(); // і туди і назад mapping
+        CreateMap<CategoryEntity, SelectItemViewModel>();
     }
 }

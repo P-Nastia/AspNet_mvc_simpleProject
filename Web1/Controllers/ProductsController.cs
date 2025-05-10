@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,25 +13,32 @@ using Web1.Data;
 using Web1.Data.Entities;
 using Web1.Interfaces;
 using Web1.Models.Category;
+using Web1.Models.Helpers;
 using Web1.Models.Product;
 
 namespace Web1.Controllers;
 
 public class ProductsController(AppDbContext context, 
-    IMapper mapper, IImageService imageService) : Controller
+    IMapper mapper) : Controller
 {
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         ViewBag.Title = "Продукти";
-        var model = mapper.ProjectTo<ProductItemViewModel>(context.Products).ToList();
-        return View(model);
-    }
+        var searchModel = new ProductSearchViewModel();
 
-    [HttpGet] //Тепер він працює методом GET - це щоб побачити форму
-    public IActionResult Create()
-    {
-        return View();
+        searchModel.Categories = await mapper.ProjectTo<SelectItemViewModel>(context.Categories).ToListAsync();
+
+        searchModel.Categories.Insert(0, new SelectItemViewModel
+        {
+            Id = 0,
+            Name = "Оберіть категорію"
+        });
+
+        var model = new ProductListViewModel();
+        model.Products = mapper.ProjectTo<ProductItemViewModel>(context.Products).ToList();
+        model.Search = searchModel;
+        return View(model);
     }
 
     

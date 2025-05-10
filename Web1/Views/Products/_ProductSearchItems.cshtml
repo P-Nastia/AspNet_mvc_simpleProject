@@ -1,0 +1,29 @@
+﻿@model ProductSearchViewModel
+
+@{
+    // для створення select categories через стандартний asp.net спосіб
+    var categories = Model.Categories.Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString() // те, що буде прилітати в контролер
+            });
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" required>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="mb-3">
+            <label asp-for="CategoryId" class="form-label"></label>
+            @Html.DropDownListFor(x =>x.CategoryId,categories,new {@class="form-select"}) @* для створення селекту категорії *@
+        </div>
+    </div>
+    <div class="col-md-3 d-flex align-items-center justify-content-center">
+        <input type="submit" value="Пошук" class="btn btn-primary" />
+    </div>
+
+</div>
