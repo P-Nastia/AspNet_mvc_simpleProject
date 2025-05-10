@@ -14,6 +14,9 @@ using System.Net;
 using Web1.Services;
 using Web1.SMTP;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using NuGet.Common;
+using AspNetCoreGeneratedDocument;
 
 namespace Web1.Controllers
 {
@@ -184,13 +187,47 @@ namespace Web1.Controllers
         [HttpGet]
         public async Task<IActionResult> ResetPassword(string email, string token)
         {
-            var user = await userManager.FindByEmailAsync(email);
-            var result = await userManager.ResetPasswordAsync(user, token, "123456");
-            return View();
+            
+            return View(new ResetPasswordViewModel() { Email = email, Token = token });
         }
 
         [HttpPost]
-        public IActionResult ResetPassword(ResetPasswordViewModel model)
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if(!ModelState.IsValid)
+                return View();
+            var user = await userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Користувача з такою поштою не існує");
+                return View(model);
+            }
+            if (await userManager.CheckPasswordAsync(user, model.Password))
+            {
+                ModelState.AddModelError("", "Введіть новий пароль. Ви використали старий");
+                return View(model);
+            }
+
+            var result = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
+            if(result.Succeeded)
+                return RedirectToAction(nameof(SuccessResetPassword));
+            else
+            {
+                foreach(var error in result.Errors)
+                {
+                    if(error.Code.Contains("PasswordTooShort"))
+                    {
+                        ModelState.AddModelError("", "Пароль закороткий");
+                        return View(model);
+                    }
+                }
+                ModelState.AddModelError("", "Не вдалося змінити пароль");
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult SuccessResetPassword()
         {
             return View();
         }
