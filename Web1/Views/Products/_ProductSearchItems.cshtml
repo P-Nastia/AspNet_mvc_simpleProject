@@ -9,21 +9,30 @@
             });
 }
 
-<div class="row">
-    <div class="col-md-3">
-        <div class="mb-3">
-            <label asp-for="Name" class="form-label"></label>
-            <input asp-for="Name" class="form-control" required>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="mb-3">
-            <label asp-for="CategoryId" class="form-label"></label>
-            @Html.DropDownListFor(x =>x.CategoryId,categories,new {@class="form-select"}) @* для створення селекту категорії *@
-        </div>
-    </div>
-    <div class="col-md-3 d-flex align-items-center justify-content-center">
-        <input type="submit" value="Пошук" class="btn btn-primary" />
-    </div>
 
-</div>
+    <form asp-action="Index" asp-controller="Products" method="get"
+          class="shadow rounded bg-light row mb-4">
+        <div class="col-md-3">
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" >
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="mb-3">
+                <label asp-for="CategoryId" class="form-label"></label>
+                @Html.DropDownListFor(x => x.CategoryId, categories, new { @class = "form-select" }) @* для створення селекту категорії *@
+            </div>
+        </div>
+    <div class="col-md-3">
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <input asp-for="Description" class="form-control" >
+        </div>
+    </div>
+        <div class="col-md-3 d-flex align-items-end pb-3 justify-content-center">
+            <input type="submit" value="Пошук" class="btn btn-primary" />
+        <a asp-action="Index" class="ms-2 btn btn-info">Очистити</a>
+        </div>
+    </form>
+

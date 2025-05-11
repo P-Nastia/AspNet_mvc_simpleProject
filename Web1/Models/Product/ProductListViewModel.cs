@@ -9,5 +9,6 @@ public class ProductListViewModel
     // модель для пошуку
     public ProductSearchViewModel Search { get; set; } = new();
 
-
+    // к-ість елементів під час пошуку
+    public int Count { get; set; }
 }

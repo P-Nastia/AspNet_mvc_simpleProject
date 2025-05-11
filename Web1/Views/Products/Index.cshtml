@@ -4,6 +4,8 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Категорії</h2>
 
+
+
     @await Html.PartialAsync("_ProductSearchItems", Model.Search)
 
 
@@ -11,7 +13,10 @@
     {
         <a asp-controller="Products" asp-action="Create" class="btn btn-success">Додати</a>
     }
-    @await Html.PartialAsync("_ListProductItems", Model.Products)
-
+   
+    <div class="alert alert-primary mt-2" role="alert">
+        Кількість елементів: <strong>@Model.Count</strong>
     </div>
+    @await Html.PartialAsync("_ListProductItems", Model.Products)
+</div>
 

@@ -21,11 +21,11 @@ namespace Web1.Controllers;
 public class ProductsController(AppDbContext context, 
     IMapper mapper) : Controller
 {
+    [HttpGet]
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(ProductSearchViewModel searchModel)
     {
         ViewBag.Title = "Продукти";
-        var searchModel = new ProductSearchViewModel();
 
         searchModel.Categories = await mapper.ProjectTo<SelectItemViewModel>(context.Categories).ToListAsync();
 
@@ -35,9 +35,17 @@ public class ProductsController(AppDbContext context,
             Name = "Оберіть категорію"
         });
 
+        var query = context.Products.AsQueryable();
+
+        // відбір тих елементів, які будуть відображатися на сторінці
         var model = new ProductListViewModel();
+        model.Count = query.Count();
+
         model.Products = mapper.ProjectTo<ProductItemViewModel>(context.Products).ToList();
         model.Search = searchModel;
+
+       
+
         return View(model);
     }
 
