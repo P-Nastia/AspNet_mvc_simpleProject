@@ -80,14 +80,22 @@ public static class DbSeeder
                         };
 
                         int priority = 0;
-                        foreach (var imageUrl in product.Images)
+                        try
                         {
-                            var savedImageUrl = await imageService.SaveImageFromUrlAsync(imageUrl);
-                            productEntity.ProductImages.Add(new ProductImageEntity
+                            foreach (var imageUrl in product.Images)
                             {
-                                Name = savedImageUrl,
-                                Priotity = priority++
-                            });
+                                var savedImageUrl = await imageService.SaveImageFromUrlAsync(imageUrl);
+                                productEntity.ProductImages.Add(new ProductImageEntity
+                                {
+                                    Name = savedImageUrl,
+                                    Priotity = priority++
+                                });
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("------------Error Add Product {0}", ex.Message);
+                            continue;
                         }
 
                         await context.Products.AddAsync(productEntity);
