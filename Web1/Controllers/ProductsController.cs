@@ -37,11 +37,28 @@ public class ProductsController(AppDbContext context,
 
         var query = context.Products.AsQueryable();
 
+        if (!string.IsNullOrEmpty(searchModel.Name))
+        {
+            string textSearch = searchModel.Name.Trim();
+            query = query.Where(x => x.Name.ToLower().Contains(textSearch.ToLower()));
+        }
+
+        if (!string.IsNullOrEmpty(searchModel.Description))
+        {
+            string textSearch = searchModel.Description.Trim();
+            query = query.Where(x => x.Description.ToLower().Contains(textSearch.ToLower()));
+        }
+
+        if (searchModel.CategoryId != 0) 
+        {
+            query = query.Where(x => x.CategoryId == searchModel.CategoryId);
+        }
+
         // відбір тих елементів, які будуть відображатися на сторінці
         var model = new ProductListViewModel();
         model.Count = query.Count();
 
-        model.Products = mapper.ProjectTo<ProductItemViewModel>(context.Products).ToList();
+        model.Products = mapper.ProjectTo<ProductItemViewModel>(query).ToList();
         model.Search = searchModel;
 
        
